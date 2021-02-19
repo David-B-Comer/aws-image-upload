@@ -15,11 +15,11 @@ public class AmazonConfig {
     public AmazonS3 s3() {
 
         AWSCredentials awsCredentials = new BasicAWSCredentials(
-                "AKIAI5SVI33CRUMWJZ5Q",
-                "lhpjTXqKVnszrCk7LVpFem3sMcPRhaUyuz1uubQO"
+
         );
         return AmazonS3ClientBuilder
                 .standard()
+                .withRegion("us-east-1")
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
                 .build();
     }
