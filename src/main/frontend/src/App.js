@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-//import logo from './logo.svg';
+import logo from './logo.svg';
 import './App.css';
 import axios from "axios";
 
 const UserProfiles = () => {
 
-  const {userProfiles, setUserProfiles} = useState([]);
+  const [userProfiles, setUserProfiles] = useState([]);
 
   const fetchUserProfiles = () => {
     axios.get("http://localhost:8080/api/v1/user-profile").then(res => { 
