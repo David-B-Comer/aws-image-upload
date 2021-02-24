@@ -33,9 +33,7 @@ public class UserProfileService {
         isFileEmpty(file);
 
         // 2. If file is an image
-        if (!Arrays.asList(IMAGE_JPEG, IMAGE_PNG, IMAGE_GIF).contains(file.getContentType())) {
-            throw new IllegalStateException("File must be an image");
-        }
+        isImage(file);
 
         // 3. The user exists in our database"
         UserProfile user = userProfileDataAccessService
@@ -60,6 +58,12 @@ public class UserProfileService {
             throw new IllegalStateException(e);
         }
 
+    }
+
+    private void isImage(MultipartFile file) {
+        if (!Arrays.asList(IMAGE_JPEG, IMAGE_PNG, IMAGE_GIF).contains(file.getContentType())) {
+            throw new IllegalStateException("File must be an image");
+        }
     }
 
     private void isFileEmpty(MultipartFile file) {
