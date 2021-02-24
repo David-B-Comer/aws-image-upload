@@ -1,10 +1,12 @@
 package com.davec.awsimageupload.profile;
 
-import org.apache.http.entity.ContentType;
+import com.davec.awsimageupload.bucket.BucketName;
+import com.davec.awsimageupload.filestore.FileStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 import static org.apache.http.entity.ContentType.*;
@@ -13,10 +15,12 @@ import static org.apache.http.entity.ContentType.*;
 public class UserProfileService {
 
     private final UserProfileDataAccessService userProfileDataAccessService;
+    private final FileStore fileStore;
 
     @Autowired
-    public UserProfileService(UserProfileDataAccessService userProfileDataAccessService) {
+    public UserProfileService(UserProfileDataAccessService userProfileDataAccessService, FileStore fileStore) {
         this.userProfileDataAccessService = userProfileDataAccessService;
+        this.fileStore = fileStore;
     }
 
     List<UserProfile> getUserProfiles() {
@@ -49,5 +53,14 @@ public class UserProfileService {
         metadata.put("Content-Length", String.valueOf(file.getSize()));
 
         // 5. Store the image in s3 and update the database (userProfileImageLink) with s3 image link
+        String path = String.format("%s/%s", BucketName.PROFILE_IMAGE.getBucketName(), user.getUserProfileID());
+        String filename = String.format("%s-%s", file.getName(), UUID.randomUUID());
+
+        try {
+            fileStore.save(path, filename, Optional.of(metadata), file.getInputStream());
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+
     }
 }
