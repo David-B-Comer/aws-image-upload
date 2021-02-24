@@ -24,6 +24,9 @@ public class UserProfileService {
     public void uploadUserProfileImage(UUID userProfileId, MultipartFile file) {
 
         // 1. Check if image is not empty
+        if (file.isEmpty()) {
+            throw new IllegalStateException("Cannot upload empty file [ " + file.getSize() + "]");
+        }
         // 2. If file is an image
         // 3. The user exists in our database
         // 4. Grab metadata from file if any
