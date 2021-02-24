@@ -36,7 +36,14 @@ public class UserProfileService {
             throw new IllegalStateException("File must be an image");
         }
         // 3. The user exists in our database
-        // 4. Grab metadata from file if any
+        UserProfile user = userProfileDataAccessService
+                .getUserProfiles()
+                .stream()
+                .filter(userProfile -> userProfile.getUserProfileID().equals(userProfileId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(String.format("User profile %s not found", userProfileId)));
+
+    // 4. Grab metadata from file if any
         // 5. Store the image in s3 and update the database (userProfileImageLink) with s3 image link
     }
 }
