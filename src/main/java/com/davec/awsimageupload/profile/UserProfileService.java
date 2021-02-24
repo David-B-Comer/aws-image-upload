@@ -5,9 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.apache.http.entity.ContentType.*;
 
@@ -31,11 +29,13 @@ public class UserProfileService {
         if (file.isEmpty()) {
             throw new IllegalStateException("Cannot upload empty file [ " + file.getSize() + "]");
         }
+
         // 2. If file is an image
         if (!Arrays.asList(IMAGE_JPEG, IMAGE_PNG, IMAGE_GIF).contains(file.getContentType())) {
             throw new IllegalStateException("File must be an image");
         }
-        // 3. The user exists in our database
+
+        // 3. The user exists in our database"
         UserProfile user = userProfileDataAccessService
                 .getUserProfiles()
                 .stream()
@@ -43,7 +43,11 @@ public class UserProfileService {
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(String.format("User profile %s not found", userProfileId)));
 
-    // 4. Grab metadata from file if any
+        // 4. Grab metadata from file if any
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("Content-Type", file.getContentType());
+        metadata.put("Content-Length", String.valueOf(file.getSize()));
+
         // 5. Store the image in s3 and update the database (userProfileImageLink) with s3 image link
     }
 }
