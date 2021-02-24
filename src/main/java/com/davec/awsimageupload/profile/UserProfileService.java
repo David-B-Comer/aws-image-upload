@@ -30,9 +30,7 @@ public class UserProfileService {
     public void uploadUserProfileImage(UUID userProfileId, MultipartFile file) {
 
         // 1. Check if image is not empty
-        if (file.isEmpty()) {
-            throw new IllegalStateException("Cannot upload empty file [ " + file.getSize() + "]");
-        }
+        isFileEmpty(file);
 
         // 2. If file is an image
         if (!Arrays.asList(IMAGE_JPEG, IMAGE_PNG, IMAGE_GIF).contains(file.getContentType())) {
@@ -62,5 +60,11 @@ public class UserProfileService {
             throw new IllegalStateException(e);
         }
 
+    }
+
+    private void isFileEmpty(MultipartFile file) {
+        if (file.isEmpty()) {
+            throw new IllegalStateException("Cannot upload empty file [ " + file.getSize() + "]");
+        }
     }
 }
