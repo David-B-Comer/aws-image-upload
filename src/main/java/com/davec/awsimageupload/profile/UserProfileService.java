@@ -36,12 +36,7 @@ public class UserProfileService {
         isImage(file);
 
         // 3. The user exists in our database"
-        UserProfile user = userProfileDataAccessService
-                .getUserProfiles()
-                .stream()
-                .filter(userProfile -> userProfile.getUserProfileID().equals(userProfileId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException(String.format("User profile %s not found", userProfileId)));
+        UserProfile user = getUserProfileOrThrow(userProfileId);
 
         // 4. Grab metadata from file if any
         Map<String, String> metadata = new HashMap<>();
@@ -58,6 +53,15 @@ public class UserProfileService {
             throw new IllegalStateException(e);
         }
 
+    }
+
+    private UserProfile getUserProfileOrThrow(UUID userProfileId) {
+        return userProfileDataAccessService
+                .getUserProfiles()
+                .stream()
+                .filter(userProfile -> userProfile.getUserProfileID().equals(userProfileId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(String.format("User profile %s not found", userProfileId)));
     }
 
     private void isImage(MultipartFile file) {
