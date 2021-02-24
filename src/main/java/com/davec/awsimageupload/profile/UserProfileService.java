@@ -39,9 +39,7 @@ public class UserProfileService {
         UserProfile user = getUserProfileOrThrow(userProfileId);
 
         // 4. Grab metadata from file if any
-        Map<String, String> metadata = new HashMap<>();
-        metadata.put("Content-Type", file.getContentType());
-        metadata.put("Content-Length", String.valueOf(file.getSize()));
+        Map<String, String> metadata = extractMetadata(file);
 
         // 5. Store the image in s3 and update the database (userProfileImageLink) with s3 image link
         String path = String.format("%s/%s", BucketName.PROFILE_IMAGE.getBucketName(), user.getUserProfileID());
@@ -53,6 +51,13 @@ public class UserProfileService {
             throw new IllegalStateException(e);
         }
 
+    }
+
+    private Map<String, String> extractMetadata(MultipartFile file) {
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("Content-Type", file.getContentType());
+        metadata.put("Content-Length", String.valueOf(file.getSize()));
+        return metadata;
     }
 
     private UserProfile getUserProfileOrThrow(UUID userProfileId) {
