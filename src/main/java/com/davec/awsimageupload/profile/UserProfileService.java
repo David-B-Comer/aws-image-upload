@@ -51,7 +51,6 @@ public class UserProfileService {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
-
     }
 
     byte[] downloadUserProfileImage(UUID userProfileId) {
